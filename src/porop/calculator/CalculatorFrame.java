@@ -5,11 +5,12 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -17,11 +18,11 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class CalculatorFrame extends JFrame implements ActionListener {
 
+	CalculatorAgent calcAgent;
 	JTextField operand1 = new JTextField(4);
 	JTextField operand2 = new JTextField(4);
 	JTextField result = new JTextField(6);
-	String[] operatorData = {"+", "-", "*", "/"};
-	JComboBox<String> operator = new JComboBox<String>(operatorData);
+	JTextField operator = new JTextField(6);
 	JButton equal = new JButton("=");
 	JButton clear = new JButton("Clear");
 	
@@ -29,7 +30,14 @@ public class CalculatorFrame extends JFrame implements ActionListener {
 	
 	
 	public CalculatorFrame() throws HeadlessException {
-		this.setTitle("Lesson01-Exam01");
+		try {
+			calcAgent = new CalculatorAgent("localhost", 8888);
+		} catch (Exception err) {
+			JOptionPane.showMessageDialog(
+					null, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+		this.setTitle("Lesson01-Exam02");
 		
 		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -38,7 +46,16 @@ public class CalculatorFrame extends JFrame implements ActionListener {
 		contentPane.add(this.createToolBar());
 		contentPane.add(Box.createVerticalGlue());
 		
+		/*
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		*/
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				calcAgent.close();
+				System.exit(0);
+			}
+		});
 		this.pack();
 		this.setLocationRelativeTo(null);		
 	}
@@ -90,14 +107,7 @@ public class CalculatorFrame extends JFrame implements ActionListener {
 		double r = 0;
 		
 		try {
-			switch (operator.getSelectedItem().toString()) {
-			case "+": r = a + b; break;
-			case "-": r = a - b; break;
-			case "*": r = a * b; break;
-			case "/": 
-				if(b == 0) throw new Exception("Cannot divide with 0!");
-				r = a / b; break;
-			}
+			r = calcAgent.compute(operator.getText(), a, b);
 			result.setText(Double.toString(r));
 		} catch (Exception err) {
 			JOptionPane.showMessageDialog(null, err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
