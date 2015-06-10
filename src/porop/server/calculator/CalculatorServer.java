@@ -11,8 +11,9 @@ public class CalculatorServer {
 	public CalculatorServer(int port) {
 		this.port = port;
 	}
+	
 	@SuppressWarnings("resource")
-	public void service() throws Exception {
+  public void service() throws Exception {
 		ServerSocket serverSocket = new ServerSocket(port);
 		System.out.println("CalculatorServer startup:");
 		
@@ -51,6 +52,7 @@ public class CalculatorServer {
 					case "+": r = a + b; break;
 					case "-": r = a - b; break;
 					case "*": r = a * b; break;
+					case "%": r = a % b; break;
 					case "/": 
 						if(b == 0) throw new Exception("Cannot divide with 0!");
 						r = a / b; break;
