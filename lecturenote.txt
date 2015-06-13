@@ -1,0 +1,101 @@
+JAVA Web development workbook
+
+1.1 
+Desktop Application의 한계
+-Deployment: 기능 추가, 변경에 따른 배포가 필요할 때 어려움.
+-Security: 애플리케이션 실행코드 내 DB 접속 정보 등이 포함되어, 추출되기 쉬움.
+
+1.2
+Client-Server Application
+: Buisness Logic, Data Logir을 Server에 포함되도록 하여, 업무 변화에 대응이 쉬워지고, DB 접속의 보안이 강화된다.
+
+1.3
+다중 클라이언트의 요청을 처리하기 위해, 서버 애플리케이션에서 Multi-thread를 도입한다.
+-> Client-Server Application은 Desktop Application보다 더 복잡하다. Main Logic 외의 Network, Multi-thread, DB connection, transaction, security, JAVA bean... Managing other resources..와 같은 영역들을 자동화할 수 있다면, 프로그램이 한층 가벼워질 것.
+
+1.4
+-Traditional Client/Server: Client(UI, Business Logic) <-Data request/response-> Server(DBMS)
+-->자료를 한 곳의 서버에서 관리하여 중복이나 불일치 방지. 프로그램의 변경에 따른 배포문제, Client의 DBMS 직접 접속에 따른 보안이슈.
+-Adavanced Client/Server: Client(UI, Verify User Input) <-Data request/response -> Application Server(Business Logic, Manage User Access) <-SQL Query/Result -> DBMS Server
+--> DB 접속 정보 노출 방지, Business Logic관련 기능 변경 배포없이 가능.
+
+1.5
+웹 애플리케이션 아키텍처
+-DBMS Server: Data 처리
+-Application server: Business Logic, SQL Query 및 Data 관리, 사용자 접근 관리, UI 생성
+-Web Server: 클라이언트와 통신, 다중 클라이언트 접속 관리.
+-Web Browser: User Interaction, UI Rendering
+
+웹 환경에서는 서버 내에 비즈니스 로직과 UI 로직을 모두 배치하여, 기눙 추가, 변경을 서버쪽에서만 바꾸어 적용할 수 있다.
+하지만, 클라이언트가 매번 UI 로직을 내려받아야하므로, 네트워크 오버헤드가 발생함.
+-> AJAX(Asynchronous JavaScript and XML): 같은 화면에서 데이터만 바뀔 때, 화면은 그대로 두고 데이터만 받아오는 기술.
+-> 변화에 유연하게 대응이 가능한 설계 (MVC Architecture, Bean 관리 컨테이너, 의존 객체 주입 등)
+
+1.6
+Desktop Application: PC의 resources를 자유롭ㅂ게 사용할 수 있어, 개인용 어플리케이션에 적합.
+C/S Application: 여러 사용자가 동시에 작업해야 하는 기업용 어플리케이션에 적합함. 업무변화가 심하거나, DB 서버가 그대로 노출될 경우, 부적합.
+Web Application: 웹브라우저가 있다면 설치 없이 애플리케이션을 사용할 수 있으며, 표준 웹 프로토콜인 HTTP를 이용하므로 이기종 플랫폼 간 연결을 지원하고, 다양한 멀티 스크린 환경해 대해 일관되고 유연하게 대응할 수 있다. HTML 등 웹기술로 역동적인 UI를 구성할 수 있다.
+
+2.1
+HTTP(Hyper-Text Transfer Protocol)
+
+3.1/3.2
+CGI: Common Gateway Interface
+
+Web Browser-Web Server간 규칙: HTTP
+Web Server-Web Application간 규칙: CGI
+
+CGI Program유형
+-Compile 방식: 기계어 -> Web Server에서 바로 Execute
+-Interpreter 방식: Script(.php, .pl, .asp, .py) -> Web Server에서 Script Engine을 통해 Script를 해석하여 실행.
+-JAVA: JAVA(.class) -> Web Server에서 JAVA를 실행할 수 있는 JVM을 포함한 CGI 프로그램을 실행시켜야 함. -> Servlet Container를 실행시켜, Servlet Container는 Servlet의 생성/실행/소멸, Life cycle을 관리함.
+*Servlet Container(WAS. Web Application Server): Tomcat, Jetty, Resin, JEUS(tmax), JBross(redhat), WebLogic(Oracle), WebSphere(IBM)
+
+3.3/3.4
+Practice: Servlet 프로그램 만들기.
+Servlet Container에 의해 실행되려면, javax.servlet.Servlet을 구현해서 만들어져야 함.
+->Unimplemented methods: init, service, destroy, getServletConfig, getServletInfo
+
+3.5
+서버에 웹 프로그램 배치하기
+-Eclipse Test Server
+Eclipse Workspace > .metadata > .plugins > org.eclipse.wst.server.core > tmp# > wtpwebapps > project name: WebContent 폴더 내용이 모두 복사되어있음. Build 하위 class파일과 Library가  WEB-INF 하위에 복사되어있음.
+-Production Server(Tomcat)
+1) Export > War:압축파일 > Server하위 webapps폴더에 복사 > Server startup 실행
+2) Tomcat 서버관리 메인페이지 > ManagerApp
+
+3.6
+Interface: Caller-Callee 간의 호출 규칙
+Servlet Interface: Servlet Container:Tomcat Server-Servlet Program
+-init(): Instance 생성 후, 1회 호출됨. Ready for service. (DB connection, Resource 생성, 준비...)
+-destroy(): Web Server or Web Application 종료 직전. Ready to die. (DB, Resource 해제...)
+-service(): Client요청 때마다 호출됨. TO DO.
+Servlet Class: Servlet Interface를 구현한 Class
+->service()는 필수. service() 외에 4개 클래스는 필요할 때만 구현.
+GenericServlet의 Abstract Class
+->init, destroy, getServletConfig, getServletInfo를 구현해둔 Class
+
+4
+1.Application 직접 File I/O -> Application이 DBMS을 통해 File I/O
+2.Application의 DBMS사용 규칙을 표준화: SQL. Structured Query Language
+3.Application DBMS과 통신하기 위해 DBMS별 프로토콜/소켓 프로그래밍  필요: Vendor(Native) API를 제공함.
+4.DBMS별 전용 Application이 필요함.
+5.ODBC. Open DataBase Connectivity API에 따라 Vendor별로 ODBC Driver
+6.ODBC API 호출단계가 추가되어 속도가 느리고, C/C++라서 Java로 호출할 수 없음.
+7.JDBC. Java DataBase Connectivity
+ -7.1. JDBC Type1: JRE에 기본으로 포함. ODBC 드라이버 사용하여 ODBC보다 더 느리다. Excel, Text 접근에 유용.
+ -7.2. JDBC Type2: 각각 DBMS에서 제공하는 API. Vender API를 직접 호출하여 ODBC 사용 안 하고, Native API를 호출. DBMS로부터 별도 다운로드 필요.
+ -7.3. JDBC Type4: DBMS와 전용 프로토콜로 직접 통신. Pure JAVA. DBMS로부터 별도 다운로드 필요.
+
+4.1
+JDBC 조회 Servlet
+-1.Register JDBC Driver: new com.mysql.jdbc.Driver()
+-2.Connect with MySQL Server with driver: DriverManager.getConnection()
+-3.Ready statement object from connection object: Connection.createStatement();
+-4.Do query with statement object: Statement.excuteQuery()
+-5.Set content Type of response object: response.setContentType()
+-6.Print data from server: while(ResultSet.next()){}
+-7.Release resources: ResultSet -> Statement -> Connection
+4.2
+GenericServlet을 상송받은 HttpServlet이 service함수를 대신해서 구현함.
+-> service에서 내부적으로 호출하는 doGet(), doPost(), doHead() 등의 메소드를 구현하면 됨.
