@@ -37,7 +37,47 @@ C/S Application: 여러 사용자가 동시에 작업해야 하는 기업용 어
 Web Application: 웹브라우저가 있다면 설치 없이 애플리케이션을 사용할 수 있으며, 표준 웹 프로토콜인 HTTP를 이용하므로 이기종 플랫폼 간 연결을 지원하고, 다양한 멀티 스크린 환경해 대해 일관되고 유연하게 대응할 수 있다. HTML 등 웹기술로 역동적인 UI를 구성할 수 있다.
 
 2.1
-HTTP(Hyper-Text Transfer Protocol)
+HTTP(Hyper-Text Transfer Protocol): Web Browser와 Web Server간 데이터 통신 규칙.
+HTTP 프로토콜의 응용/확장
+-SOAP(Simple Object Access Protocol)
+-RESTful(REpresentational State Transfer)
+-WebDAV(World Wide Web Distributed Authoring and Versioning)
+-CalDAV(Calendar Distributed Authoring and Versioning)
+HTTP Proxy 프로그램으로 Web Browser와 Web Server 간에 주고받는 데이터를 모니터링할 수 있다. (Charlse, Fiddler...)
+*Proxy Server? Client와 Server 간 통신을 중계해주는 컴퓨터/프로그램. 주로 서버의 응답 결과를 cache로 저장하거나, 데이터를 감시하는 보안 기능을 위해 사용한다.
+
+HTTP 요청: 요청 데이터 라인의 각 문자열 끝에 개행문자를 붙여 서버로 보낸다.
+-Request line: 메서드, 요청URI, 프로토콜 버전으로 구성된다. (ex)GET / HTTP/1.1)
+ -메서드: GET, POST, HEAD, PUT, DELETE, TRACE, CONNECT, OPTIONS 등
+ -요청URI: 요청하는 자원의 식별자. HTML, Image, Video, Application 등이 있는 가상의 경로.
+ -버전: 요청 정보가 어떤 버전에 맞추어 작성했는지 알려주기 위함.
+-Requiest Header: 서버가 요청을 처리할 때 참고하라고 클라이언트가 알려주는 정보. 헤더 이름과 값의 쌍으로 표시하며, 다음의 네가지 종류가 있다.
+ -General Header: 요청, 응답 모두에 적용할 수 있음. Cache-Control, Connection, Date, Pragma, Trailer, Transfer-Encoding, Upgrade, Via, Warning
+ -Request Header: Accept, Accept-Charset, Accept-Encoding, Accept-Language, Authorization, Expect, From, Host, If-Match, If-Modified-Since, If-None-Match, If-Range, If-Unmodified-Since, Max-Forwards, Proxy-Authorization, Range, Refere, TE, User-Agent(OS, Browser information)
+ -Response Header: Accept-Ranges, Age, ETAg, Location, Proxy-Authenticate, Retry-After, Server, Vary, WWW-Authenticate
+ -Entity Header: 보내거나 받는 본문 데이터를 설명함. Allow, Content-Encoding, Content-Launguage, Content-Location, Content-MD5, Content-Range, Content-Type, Expires, Last-Modified, etc extended headers...
+*개행문자: MS Window에서는 CR. Carriage Return 코드와 LF. Linefeed 코드를 함께 사용하여 개행을 표시하나, Linux나 Mac OSX 등 Unix 계열에서는 LF 코드만 사용하여, 서로 호환이 되지 않는 경우가 발생한다.
+-Empty Line: 요청 헤더의 끝을 표시하는 공백 라인
+-Message Body: GET요청은 공백라인으로 끝나고, 서버에 보낼 데이터가 있다면, URL 주소에 붙여 보내지만, POST 요청은 공백 라인 다음에 서버에 보낼 데이터가 온다.
+
+HTTP 응답: 웹 서버는 웹 브라우저의 요청에 대한 작업을 수행한 후 응답 데이터를 보낸다.
+-Status Line: 프로토콜 버전과 상태코드, 설명으로 구성된다. (ex)HTTP/1.1 200 OK)
+ -응답 상태코드: 200 Success, 301 Moved Permanatly, 304 Not Modified, 400 Bad Request, 404 Not Found, 500 Server Error (http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
+ -응답 헤더: 응답 데이터를 처리할 때 참고하라고 서버가 알려주는 정보. Content-Type은 웹 브라우저에게 보내는 데이터의 형식, Content-Length는 웹 브라우저에게 보내는 message-body의 Byte 크기
+-Empty Line: 메세지 헤더의 끝을 표시하는 공백 라인
+-Message Body: 응답 데이터
+
+*Protocol
+-FTP. file Transfer Protocol
+-Telnet: Internet이나 LAN(Local Area Network) 상에서 문자 기분으로 원격의 컴퓨터를 제어하기위한 통신 규약 -> 보안의 이유로 SSH(Secure Shell) Protocol 원격 접속 프로그램을 주요 사용.
+-XMPP. Extensible Messaging and Presence Protocol: Instance Message 및 사용자의 접속 상태 정보를 교환할 목적으로 만든 통신 규약. Google Talk
+-SMTP. Simple Mail Transfer Protocol: 인터넷 상에서 메일을 보내기 위한 통신 규약. 
+-POP3. Post Office Protocol version 3:이메일을 가져오는 데 사용하는 통신 규약. 이메일을 가져온 후 서버의 메일을 삭제함.
+-IMAP. Internet Message Access Protocol: 이메일을 가져오는 데 사용하는 통신 규약. 이메일을 가져온 뒤에 서버의 메일을 지우지 않으나, POP3에 비해 통신 트래픽이 높다.
+-LDAP. Lightweight Directory Access Protocol: Directory Service에 등록된 자원들을 찾는 통신 규약.
+IRC. Internet Relay Chat: 실시간 채팅을 위한 통신 규약.
+
+
 
 3.1/3.2
 CGI: Common Gateway Interface
