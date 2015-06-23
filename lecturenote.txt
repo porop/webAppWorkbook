@@ -232,6 +232,24 @@ javax.servlet.GenericServlet: 추상클래스. Servlet 인터페이스에 선언
 1.Application 직접 File I/O -> Application이 DBMS을 통해 File I/O
 2.Application의 DBMS사용 규칙을 표준화: SQL. Structured Query Language
 -> DB가 할 일을 SQL로 작성하고, JDBC를 사용하여 DB로 SQL을 보내고 결과를 받음.
+3.Application DBMS과 통신하기 위해 DBMS별 프로토콜/소켓 프로그래밍  필요: Vendor(Native) API를 제공함.
+4.DBMS별 전용 Application이 필요함.
+5.ODBC. Open DataBase Connectivity API에 따라 Vendor별로 ODBC Driver
+6.ODBC API 호출단계가 추가되어 속도가 느리고, C/C++라서 Java로 호출할 수 없음.
+7.JDBC. Java DataBase Connectivity
+ -7.1. JDBC Type1: JRE에 기본으로 포함. ODBC 드라이버 사용하여 ODBC보다 더 느리다. Excel, Text 접근에 유용.
+ -7.2. JDBC Type2: 각각 DBMS에서 제공하는 API. Vender API를 직접 호출하여 ODBC 사용 안 하고, Native API를 호출. DBMS로부터 별도 다운로드 필요.
+ -7.3. JDBC Type4: DBMS와 전용 프로토콜로 직접 통신. Pure JAVA. DBMS로부터 별도 다운로드 필요.
+
+4.1
+JDBC 조회 Servlet
+-1.Register JDBC Driver: new com.mysql.jdbc.Driver()
+-2.Connect with MySQL Server with driver: DriverManager.getConnection()
+-3.Ready statement object from connection object: Connection.createStatement();
+-4.Do query with statement object: Statement.excuteQuery()
+-5.Set content Type of response object: response.setContentType()
+-6.Print data from server: while(ResultSet.next()){}
+-7.Release resources: ResultSet -> Statement -> Connection
 *DBMS 연동 서블릿 만들기
  1)WEB-INF/lib 폴더에 JDBC드라이버(Type4)를 받습니다.
  2)GenericServlet을 상송받은 Servlet을 생성, service()함수를 구현.
@@ -251,24 +269,7 @@ javax.servlet.GenericServlet: 추상클래스. Servlet 인터페이스에 선언
   -각 자원 해제 중 오류가 발생하여도 다음 자원을 해제하기 위해 try~ catch~문 사용. 자원 해제에 실패하더라도 할수있는 작업이 없으므로, catch 블록은 비어있음.
   -사용된 자원을 역순으로 해제해야 함.
 
-3.Application DBMS과 통신하기 위해 DBMS별 프로토콜/소켓 프로그래밍  필요: Vendor(Native) API를 제공함.
-4.DBMS별 전용 Application이 필요함.
-5.ODBC. Open DataBase Connectivity API에 따라 Vendor별로 ODBC Driver
-6.ODBC API 호출단계가 추가되어 속도가 느리고, C/C++라서 Java로 호출할 수 없음.
-7.JDBC. Java DataBase Connectivity
- -7.1. JDBC Type1: JRE에 기본으로 포함. ODBC 드라이버 사용하여 ODBC보다 더 느리다. Excel, Text 접근에 유용.
- -7.2. JDBC Type2: 각각 DBMS에서 제공하는 API. Vender API를 직접 호출하여 ODBC 사용 안 하고, Native API를 호출. DBMS로부터 별도 다운로드 필요.
- -7.3. JDBC Type4: DBMS와 전용 프로토콜로 직접 통신. Pure JAVA. DBMS로부터 별도 다운로드 필요.
-
-4.1
-JDBC 조회 Servlet
--1.Register JDBC Driver: new com.mysql.jdbc.Driver()
--2.Connect with MySQL Server with driver: DriverManager.getConnection()
--3.Ready statement object from connection object: Connection.createStatement();
--4.Do query with statement object: Statement.excuteQuery()
--5.Set content Type of response object: response.setContentType()
--6.Print data from server: while(ResultSet.next()){}
--7.Release resources: ResultSet -> Statement -> Connection
 4.2
-GenericServlet을 상송받은 HttpServlet이 service함수를 대신해서 구현함.
--> service에서 내부적으로 호출하는 doGet(), doPost(), doHead() 등의 메소드를 구현하면 됨.
+GenericServlet을 상속받은 HttpServlet이 service함수를 대신해서 구현함.
+-> 클라이언트의 요청방식에 따라 service에서 내부적으로 호출하는 doGet(), doPost(), doHead() 등의 메소드를 구현.
+*GET요청: 1)Web Browser의 주소창의 URL로 연결 2)<a>태그의 링크 선택 3)<form>태그의 method가 get일 때
