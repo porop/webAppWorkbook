@@ -231,6 +231,26 @@ javax.servlet.GenericServlet: 추상클래스. Servlet 인터페이스에 선언
 4
 1.Application 직접 File I/O -> Application이 DBMS을 통해 File I/O
 2.Application의 DBMS사용 규칙을 표준화: SQL. Structured Query Language
+-> DB가 할 일을 SQL로 작성하고, JDBC를 사용하여 DB로 SQL을 보내고 결과를 받음.
+*DBMS 연동 서블릿 만들기
+ 1)WEB-INF/lib 폴더에 JDBC드라이버(Type4)를 받습니다.
+ 2)GenericServlet을 상송받은 Servlet을 생성, service()함수를 구현.
+ 3)JDBC관련 객체 주소를 보관할 참조 변수 선언.(Connection, Statement, ResultSet)
+ 4)JDBC API를 사용할 부분을 try~ catch~문으로 감싸고, 발생한 예외를 ServletException으로 Servlet Container에 던짐.
+ 5)DriverManager를 이용하여 java.sql.Driver 인터페이스 구현체(ex)com.mysql.jdbc.Driver) 등록
+  -Driver구현체의 주요 메서드: getMajorVersion(), getMinorVersion(), acceptsURL(), connect()
+  ->DriverManager는 구현체를 통해 Driver 정보를 확인, 사용할 Driver를 결정함.
+ 6)getConnection()을 호출하여 DB연결. java.sql.Connection 인터페이스 구현체가 리턴됨.
+  -Connection구현체의 주요 메서드: createStatement(), prepareStatement(), prepareCall(), commit(), rollback()
+ 7)createStatement()를 호출하여 SQL문을 실행할 객체 준비. java.sql.Statement 인터페이스 구현체가 리턴됨.
+  -Statement구현체의 주요 메서드: executeQuery(), executeUpdate(), execute(), executeBatch()
+ 8)executeQuiery()를 사용하여 SQL문(SELECT문)을 서버에 보내기. java.sql.ResultSet 인터페이스 구현체가 리턴됨.
+  -ResultSet구현체의 주요 메서드: first(), last(), previous(), next(), getXXX(), updateXXX(), deleteRow()
+ 9)결과 출력
+ 10)마무리:자원해제. 정상적으로 수행되든 오류가 발생하든 반드시 수행되기 위해 finally 블록 내에 작성.
+  -각 자원 해제 중 오류가 발생하여도 다음 자원을 해제하기 위해 try~ catch~문 사용. 자원 해제에 실패하더라도 할수있는 작업이 없으므로, catch 블록은 비어있음.
+  -사용된 자원을 역순으로 해제해야 함.
+
 3.Application DBMS과 통신하기 위해 DBMS별 프로토콜/소켓 프로그래밍  필요: Vendor(Native) API를 제공함.
 4.DBMS별 전용 Application이 필요함.
 5.ODBC. Open DataBase Connectivity API에 따라 Vendor별로 ODBC Driver
