@@ -2,6 +2,9 @@ package porop.member;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,5 +31,35 @@ public class MemberAddServlet extends HttpServlet {
 		out.println("<input type='reset' value='reset'>");
 		out.println("</form>");
 		out.println("</body></html>");
+	}
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8");
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/studydb", "study", "study");
+			stmt = conn.prepareStatement("INSERT INTO MEMBERS(EMAIL,PWD,MNAME,CRE_DATE,MOD_DATE) VALUES (?,?,?,NOW(),NOW())");
+			stmt.setString(1, request.getParameter("email"));
+			stmt.setString(2, request.getParameter("password"));
+			stmt.setString(3, request.getParameter("name"));
+			stmt.executeUpdate();
+			
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<html><head><title>Member Added</title></head>");
+			out.println("<body><h1>☆Member Added</h1>");
+			out.println("<p>Member '"+request.getParameter("name")+"' is successfully added!</p>");
+			out.println("</body></html>");
+		} catch (Exception e) {
+			throw new ServletException(e);
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+			try {if (conn != null) conn.close();} catch(Exception e) {}
+		}
 	}
 }
