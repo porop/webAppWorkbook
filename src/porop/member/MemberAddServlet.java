@@ -50,8 +50,11 @@ public class MemberAddServlet extends HttpServlet {
 			stmt.executeUpdate();
 			
 			response.setContentType("text/html; charset=UTF-8");
+			//response.addHeader("Refresh", "1;url=add");
 			PrintWriter out = response.getWriter();
-			out.println("<html><head><title>Member Added</title></head>");
+			out.println("<html><head><title>Member Added</title>");
+			out.println("<meta http-equiv='Refresh' content='1; url=list'>");
+			out.println("</head>");
 			out.println("<body><h1>☆Member Added</h1>");
 			out.println("<p>Member '"+request.getParameter("name")+"' is successfully added!</p>");
 			out.println("</body></html>");

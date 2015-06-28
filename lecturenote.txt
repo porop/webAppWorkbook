@@ -250,10 +250,14 @@ JDBC 조회 Servlet
 -5.Set content Type of response object: response.setContentType()
 -6.Print data from server: while(ResultSet.next()){}
 -7.Release resources: ResultSet -> Statement -> Connection
+
 *DBMS 연동 서블릿 만들기
  1)WEB-INF/lib 폴더에 JDBC드라이버(Type4)를 받습니다.
  2)GenericServlet을 상속받은 Servlet을 생성, service()함수를 구현.
  2.1)HttpServlet을 상속받은 Servlet을 생성. doGet()함수, doPost()함수를 구현.
+ GenericServlet을 상속받은 HttpServlet이 service함수를 대신해서 구현함.
+ -> 클라이언트의 요청방식에 따라 service에서 내부적으로 호출하는 doGet(), doPost(), doHead() 등의 메소드를 구현.
+ *GET요청: 1)Web Browser의 주소창의 URL로 연결 2)<a>태그의 링크 선택 3)<form>태그의 method가 get일 때
  3)JDBC관련 객체 주소를 보관할 참조 변수 선언.(Connection, Statement, ResultSet)
  4)JDBC API를 사용할 부분을 try~ catch~문으로 감싸고, 발생한 예외를 ServletException으로 Servlet Container에 던짐.
  5)DriverManager를 이용하여 java.sql.Driver 인터페이스 구현체(ex)com.mysql.jdbc.Driver) 등록
@@ -266,13 +270,14 @@ JDBC 조회 Servlet
   -Statement구현체의 주요 메서드: executeQuery(), executeUpdate(), execute(), executeBatch()
  8)executeQuiery()를 사용하여 SQL문(SELECT문)을 서버에 보내기. java.sql.ResultSet 인터페이스 구현체가 리턴됨.
   -ResultSet구현체의 주요 메서드: first(), last(), previous(), next(), getXXX(), updateXXX(), deleteRow()
- 8.1)executeUpdate()를 사용하여 SQL문(INSERT문)을 서버에 보내기. 결과 레코드를 만들지 않는 DDL, DML 종류의 SQL문을 실행할 떄, executeUpdatE()를 호출.
+ 8.1)executeUpdate()를 사용하여 SQL문(INSERT문)을 서버에 보내기. 결과 레코드를 만들지 않는 DDL, DML 종류의 SQL문을 실행할 떄, executeUpdate()를 호출.
  9)결과 출력
  10)마무리:자원해제. 정상적으로 수행되든 오류가 발생하든 반드시 수행되기 위해 finally 블록 내에 작성.
   -각 자원 해제 중 오류가 발생하여도 다음 자원을 해제하기 위해 try~ catch~문 사용. 자원 해제에 실패하더라도 할수있는 작업이 없으므로, catch 블록은 비어있음.
   -사용된 자원을 역순으로 해제해야 함.
 *PreparedStatement: 질의할 때마다 SQL문을 컴파일하는 Statement와 달리, SQL문을 미리 준비하여 컴파일해두고, 입력 매개변수 값만 추가하여 서버에 전송. 여러 번 반복질의하는 경우, 실행속도가 빠름. 바이너리 데이터 전송이 가능하고, SQL문과 입력 매개변수가 분리되어 있어 코드 작성이 편하다.
 
+4.4
 *인코딩 문제
 Servlet에서 getParameter()를 호출하면, 이 메서드는 기본적으로 매개변수의 값이 ISO-8859-1로 인코딩되었다고 가정하고 유니코드로 바꾸어 반환합니다.
 한글 깨짐을 해결하려면, 
@@ -281,7 +286,7 @@ request.setCharacterEncoding("UTF-8")
 ->GET방식에서 매개변수는 URL에 쿼리스트링으로 포함되므로, setCharacterEncoding()이 적용되지 않으며, Servlet Container의 Connector태그에 URIEncoding 옵션을 추가해주여야 함.
 <Connector ... URIEncoding="UTF-8" />
 
-4.2
-GenericServlet을 상속받은 HttpServlet이 service함수를 대신해서 구현함.
--> 클라이언트의 요청방식에 따라 service에서 내부적으로 호출하는 doGet(), doPost(), doHead() 등의 메소드를 구현.
-*GET요청: 1)Web Browser의 주소창의 URL로 연결 2)<a>태그의 링크 선택 3)<form>태그의 method가 get일 때
+4.5
+Refresh: 일정 시간이 지나고 나서 자동으로 서버에 요청을 보냄
+1) 응답 헤더에 리프레시 정보를 추가. response.addHeader("Refresh", "1;url=list");
+2) 메타 태그를 이용한 리프레시:  out.println("<meta http-equiv='Refresh' content='1;url=list'>");
