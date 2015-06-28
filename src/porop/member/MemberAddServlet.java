@@ -49,6 +49,7 @@ public class MemberAddServlet extends HttpServlet {
 			stmt.setString(3, request.getParameter("name"));
 			stmt.executeUpdate();
 			
+			response.sendRedirect("list");
 			response.setContentType("text/html; charset=UTF-8");
 			//response.addHeader("Refresh", "1;url=add");
 			PrintWriter out = response.getWriter();

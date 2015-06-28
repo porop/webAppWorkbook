@@ -286,7 +286,8 @@ request.setCharacterEncoding("UTF-8")
 ->GET방식에서 매개변수는 URL에 쿼리스트링으로 포함되므로, setCharacterEncoding()이 적용되지 않으며, Servlet Container의 Connector태그에 URIEncoding 옵션을 추가해주여야 함.
 <Connector ... URIEncoding="UTF-8" />
 
-4.5
-Refresh: 일정 시간이 지나고 나서 자동으로 서버에 요청을 보냄
+4.5 Refresh: 일정 시간이 지나고 나서 자동으로 서버에 요청을 보냄
 1) 응답 헤더에 리프레시 정보를 추가. response.addHeader("Refresh", "1;url=list");
 2) 메타 태그를 이용한 리프레시:  out.println("<meta http-equiv='Refresh' content='1;url=list'>");
+4.6 Redirect: 결과를 출력하지 않고 즉시 서버에 요청을 보냄. 응답 상태 코드가 302로 출력됨.
+-HttpServletResponse의 sendRedirect()호출: response.sendRedirect("list");
