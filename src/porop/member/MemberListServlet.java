@@ -39,7 +39,8 @@ public class MemberListServlet extends HttpServlet {
 			while(rs.next()) {
 				out.println(rs.getInt("MNO")+", "+
 				"<a href='update?no=" + rs.getInt("MNO") +"'>" + 
-				rs.getString("MNAME")+"</a>, "+rs.getString("EMAIL")+", "+rs.getDate("CRE_DATE")+"<br>");
+				rs.getString("MNAME")+"</a>, "+rs.getString("EMAIL")+", "+rs.getDate("CRE_DATE")+
+				" <a href='delete?no=" + rs.getInt("MNO") +"'>[DEL]</a>"+"<br>");
 			}
 			out.println("</body></html>");
 		} catch(Exception e) {

@@ -71,6 +71,7 @@ public class UpdateServlet extends HttpServlet {
 			out.println("이름: <input type='text' name='name' value='"+rs.getString("MNAME")+"'><br>");
 			out.println("이메일: <input type='text' name='email' value='"+rs.getString("EMAIL")+"'><br>");
 			out.println("<input type='submit' value='SAVE'>");
+			out.println("<input type='button' value='DELETE' onclick='location.href=\"delete?no="+request.getParameter("no")+"\"'>");
 			out.println("<input type='button' value='CANCEL' onclick='location.href=\"list\"'>");
 			out.println("</form></body></html>");
 			out.println("가입일: "+rs.getDate("CRE_DATE")+"<br>");
