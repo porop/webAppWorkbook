@@ -291,3 +291,7 @@ request.setCharacterEncoding("UTF-8")
 2) 메타 태그를 이용한 리프레시:  out.println("<meta http-equiv='Refresh' content='1;url=list'>");
 4.6 Redirect: 결과를 출력하지 않고 즉시 서버에 요청을 보냄. 응답 상태 코드가 302로 출력됨.
 -HttpServletResponse의 sendRedirect()호출: response.sendRedirect("list");
+
+4.7 Servlet 초기화 매개변수: Servlet을 생성하고 초기화할 때, 즉 init()을 호출할 때, 서블릿 컨테이너가 전달하는 데이터. 데이터베이스 연결정보와 같은 정적인 데이터를 전달.
+1) 서블릿 배치 정보에 설정 (DD파일. web.xml) 2) 애노테이션을 사용하여 서블릿 소스 코드에 설정 -> 변경되기 쉽기 때문에, 소스 코드 외부 파일에 두는 것을 추천.
+

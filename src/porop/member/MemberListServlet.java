@@ -35,7 +35,9 @@ public class MemberListServlet extends HttpServlet {
 			out.println("<html><head><title>Member List</title></head>");
 			out.println("<body><h1>☆Member List</h1>");
 			while(rs.next()) {
-				out.println(rs.getInt("MNO")+", "+rs.getString("MNAME")+", "+rs.getString("EMAIL")+", "+rs.getDate("CRE_DATE")+"<br>");
+				out.println(rs.getInt("MNO")+", "+
+				"<a href='update?no=" + rs.getInt("MNO") +"'>" + 
+				rs.getString("MNAME")+"</a>, "+rs.getString("EMAIL")+", "+rs.getDate("CRE_DATE")+"<br>");
 			}
 			out.println("</body></html>");
 		} catch(Exception e) {
@@ -44,6 +46,6 @@ public class MemberListServlet extends HttpServlet {
 			try{if (rs != null) rs.close();} catch(Exception e) {}
 			try{if (stmt != null) stmt.close();} catch(Exception e) {}
 			try{if (conn != null) conn.close();} catch(Exception e) {}
-		}		
+		}
 	}
 }
