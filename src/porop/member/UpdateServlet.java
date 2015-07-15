@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;
 //import javax.servlet.annotation.WebInitParam;
@@ -49,10 +50,15 @@ public class UpdateServlet extends HttpServlet {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			//Note: without using 'init parameter'
+			//Note: without using 'init params'
 			//DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			Class.forName(this.getInitParameter("driver"));
-			conn = DriverManager.getConnection(this.getInitParameter("url"), this.getInitParameter("username"), this.getInitParameter("password"));
+			//Note: using 'servlet init params'
+			//Class.forName(this.getInitParameter("driver"));
+			//conn = DriverManager.getConnection(this.getInitParameter("url"), this.getInitParameter("username"), this.getInitParameter("password"));
+			//Note: using 'context init params'
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
+			conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("select MNO,EMAIL,MNAME,CRE_DATE from MEMBERS where MNO="+request.getParameter("no"));
 			rs.next();//Note: Only one person
@@ -86,8 +92,9 @@ public class UpdateServlet extends HttpServlet {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			Class.forName(this.getInitParameter("driver"));
-			conn = DriverManager.getConnection(this.getInitParameter("url"), this.getInitParameter("username"), this.getInitParameter("password"));
+			ServletContext sc = this.getServletContext();
+			Class.forName(sc.getInitParameter("driver"));
+			conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
 			stmt = conn.prepareStatement("UPDATE MEMBERS SET EMAIL=?,MNAME=?,MOD_DATE=now() WHERE MNO=?");
 			stmt.setString(1, request.getParameter("email"));
 			stmt.setString(2, request.getParameter("name"));

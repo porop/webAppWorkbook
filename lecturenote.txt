@@ -295,3 +295,5 @@ request.setCharacterEncoding("UTF-8")
 4.7 Servlet 초기화 매개변수: Servlet을 생성하고 초기화할 때, 즉 init()을 호출할 때, 서블릿 컨테이너가 전달하는 데이터. 데이터베이스 연결정보와 같은 정적인 데이터를 전달.
 1) 서블릿 배치 정보에 설정 (DD파일. web.xml) 2) 애노테이션을 사용하여 서블릿 소스 코드에 설정 -> 변경되기 쉽기 때문에, 소스 코드 외부 파일에 두는 것을 추천.
 
+4.8 Context 초기화 매개변수: 여러 서블릿이 사용하는 JDBC 드라이버와 연결정보가 같다면, 웹 애플리케이션의 서블릿들이 공유할 수 있는 Context 초기화 매개변수를 사용: ServletContext 객체의 getInitParameter()를 사용.
+

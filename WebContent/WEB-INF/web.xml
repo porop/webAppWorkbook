@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>workbook</display-name>
+  <!-- Context Initialized Parameters -->
+  <context-param>
+  	<param-name>driver</param-name>
+  	<param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+      <param-name>url</param-name>
+      <param-value>jdbc:mysql://localhost/studydb</param-value>
+  </context-param>
+  <context-param>
+      <param-name>username</param-name>
+      <param-value>study</param-value>
+  </context-param>
+  <context-param>
+      <param-name>password</param-name>
+      <param-value>study</param-value>
+  </context-param>
   <!-- 서블릿 선언 -->
+  <servlet>
+    <servlet-name>MemberAddServlet</servlet-name>
+    <servlet-class>porop.member.MemberAddServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>MemberListServlet</servlet-name>
+    <servlet-class>porop.member.MemberListServlet</servlet-class>
+  </servlet>
   <servlet>
     <servlet-name>MemberUpdateServlet</servlet-name>
     <servlet-class>porop.member.UpdateServlet</servlet-class>
+  	<!-- Servlet Initialized Parameters -->
+  	<!-- 
     <init-param>
       <param-name>driver</param-name>
       <param-value>com.mysql.jdbc.Driver</param-value>
@@ -21,8 +48,17 @@
       <param-name>password</param-name>
       <param-value>study</param-value>
     </init-param>
+    -->
   </servlet>
   <!-- 서블릿을 URL과 연결 -->
+  <servlet-mapping>
+    <servlet-name>MemberAddServlet</servlet-name>
+    <url-pattern>/member/add</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MemberListServlet</servlet-name>
+    <url-pattern>/member/list</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>MemberUpdateServlet</servlet-name>
     <url-pattern>/member/update</url-pattern>
