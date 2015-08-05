@@ -297,3 +297,24 @@ request.setCharacterEncoding("UTF-8")
 
 4.8 Context 초기화 매개변수: 여러 서블릿이 사용하는 JDBC 드라이버와 연결정보가 같다면, 웹 애플리케이션의 서블릿들이 공유할 수 있는 Context 초기화 매개변수를 사용: ServletContext 객체의 getInitParameter()를 사용.
 
+4.9 Filter: Servlet 실행 전 후에 어떠한 작업을 하고자 사용하는 기술.(javax.servlet.Filter) Servlet Container와 Servlet 간의 요청/응답 사이에 추가되는 모듈. 코드 중복을 방치하고 캡슐화 가능.
+ex) Set Character Encoding, Decription, Resource, Logging... 
+1) init(): 필터 객체가 생성되고 나서 딱 한번 호출되며, 이 메서드의 매개변수(FilterConfig 객체)를 통해 필터 초기화 매개변수의 값을 꺼낼 수 있다.
+2) doFilter(): 필터와 연결된 URL에 대해 요청이 들어오면 호출됨. nextFilter.doFilter()는 다음 필터를 호출하며, 다음 필터가 없다면, 서블릿의 service()메소드가 호출된다. -> 서블릿이 실행되기 전의 작업은 nextFilter.doFilter(); 호출 전에, 서블릿이 실행된 이후의 작업은 nextFilter.doFilter(); 호출 이후에 작성.
+ -사전작업: 클라이언트가 보낸 데이터의 문자 집합을 설정, 압축 데이터 풀기, 암호화된 데이터를 원래 데이터로 복원, 로그 남기기, 사용자 검증하기, 사용권한 확인하기 등
+ -사후작업: 응답 데이터에 대해 압축, 함호화, 데이터 형식 변환하기 등
+3) destroy(): 마무리 작업
+필터의 배치: DD파일에 기술, 애노테이션
+
+4.10
+JDBC API를 통해 CRUD: 데이터를 등록 Create, 조회 Retrieve, 변경 Update, 삭제 Delete하는 방법.
+HTTP 프로토콜의 요청 형식 중 GET, POST요청을 다루는 방법.
+-GET: 데이터 조회나 삭제 요청처럼 간단한 데이터를 보내는 경우. HttpServlet의 doGet()을 재정의.
+-POST: 데이터 등록이나 변경, 로그인과 같은 대량의 데이터를 보내거나 브라우저의 주소창에 노출되지 말아야할 데이터를ㄹ 보내는 경우. HttpServlet의 doPost()를 재정의.
+클라이언트에서 보낸 한글 데이터는 getParameter()호출 이전에 setCharacterEncoding()을 호출하여 UTF-8로 먼저 지정해야 함.
+다른 페이지로 전환 방법: Refresh, Redirect. Refresh는 클라이언트에 본문을 보내고, 리다이렉트는 본문을 보내지 않아, 요청 결과가 노출되지 않음.
+-Refresh: 응답 헤더에 설정. HTML의 meta태그 설정
+-Redirect: ServletResponse의 sendRedirect() 호출.
+서블릿 초기화 매개변수/컨텍스트 초기화 매개변수에 웹 애플리케이션을 배치한 후에도 언제든지 변경 가능한 DB 연결정보와 같은 설정 정보를 포함하여, 유지보수가 쉽게 작성할 수 있음.
+필터: 서블릿을 실행하기 전이나 후의 작업
+

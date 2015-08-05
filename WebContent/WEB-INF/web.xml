@@ -17,6 +17,14 @@
     <param-name>password</param-name>
     <param-value>study</param-value>
   </context-param>
+  <filter>
+  	<filter-name>CharacterEncodingFilter</filter-name>
+  	<filter-class>porop.filters.CharacterEncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>UTF-8</param-value>
+  	</init-param>
+  </filter>
   <servlet>
     <servlet-name>MemberAddServlet</servlet-name>
     <servlet-class>porop.member.MemberAddServlet</servlet-class>
